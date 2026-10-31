@@ -1,0 +1,500 @@
+
+--========================================
+-- EXZ HUB CUSTOM UI
+--========================================
+
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local Player = Players.LocalPlayer
+
+local ParentGui = Player:WaitForChild("PlayerGui")
+pcall(function()
+    if typeof(gethui) == "function" then
+        ParentGui = gethui()
+    end
+end)
+
+local Old = ParentGui:FindFirstChild("EXZ_CUSTOM_UI")
+if Old then Old:Destroy() end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "EXZ_CUSTOM_UI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.Parent = ParentGui
+
+local Cyan = Color3.fromRGB(0, 190, 240)
+local Dark = Color3.fromRGB(8, 8, 8)
+local Panel = Color3.fromRGB(25, 25, 25)
+local White = Color3.fromRGB(245, 245, 245)
+
+local function Corner(obj, radius)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius)
+    c.Parent = obj
+    return c
+end
+
+local function Stroke(obj, color, thickness)
+    local s = Instance.new("UIStroke")
+    s.Color = color
+    s.Thickness = thickness
+    s.Parent = obj
+    return s
+end
+
+-- MAIN WINDOW
+
+local Main = Instance.new("Frame")
+Main.Name = "MainWindow"
+Main.Size = UDim2.new(0.92, 0, 0.88, 0)
+Main.Position = UDim2.fromScale(0.5, 0.5)
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.BackgroundColor3 = Dark
+Main.BorderSizePixel = 0
+Main.Parent = ScreenGui
+Corner(Main, 28)
+Stroke(Main, Cyan, 3)
+
+local SizeLimit = Instance.new("UISizeConstraint")
+SizeLimit.MinSize = Vector2.new(320, 300)
+SizeLimit.MaxSize = Vector2.new(1000, 750)
+SizeLimit.Parent = Main
+
+-- HEADER
+
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 100)
+Header.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Header.BorderSizePixel = 0
+Header.Parent = Main
+Corner(Header, 25)
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(0.65, 0, 1, 0)
+Title.Position = UDim2.fromOffset(30, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "EXZ HUB"
+Title.TextColor3 = Cyan
+Title.TextSize = 32
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
+
+-- MINIMIZE BUTTON
+
+local MinButton = Instance.new("TextButton")
+MinButton.Size = UDim2.fromOffset(65, 65)
+MinButton.Position = UDim2.new(1, -155, 0.5, 0)
+MinButton.AnchorPoint = Vector2.new(0, 0.5)
+MinButton.BackgroundColor3 = Color3.fromRGB(255, 195, 65)
+MinButton.Text = "-"
+MinButton.TextSize = 38
+MinButton.Font = Enum.Font.GothamBold
+MinButton.TextColor3 = White
+MinButton.Parent = Header
+Corner(MinButton, 18)
+
+-- CLOSE BUTTON
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.fromOffset(65, 65)
+CloseButton.Position = UDim2.new(1, -80, 0.5, 0)
+CloseButton.AnchorPoint = Vector2.new(0, 0.5)
+CloseButton.BackgroundColor3 = Color3.fromRGB(245, 65, 75)
+CloseButton.Text = "X"
+CloseButton.TextSize = 30
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextColor3 = White
+CloseButton.Parent = Header
+Corner(CloseButton, 18)
+
+-- LEFT SIDEBAR
+
+local Sidebar = Instance.new("Frame")
+Sidebar.Position = UDim2.fromOffset(12, 110)
+Sidebar.Size = UDim2.new(0, 250, 1, -122)
+Sidebar.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+Sidebar.BorderSizePixel = 0
+Sidebar.Parent = Main
+Corner(Sidebar, 20)
+
+local SideLayout = Instance.new("UIListLayout")
+SideLayout.Padding = UDim.new(0, 14)
+SideLayout.SortOrder = Enum.SortOrder.LayoutOrder
+SideLayout.Parent = Sidebar
+
+local SidePadding = Instance.new("UIPadding")
+SidePadding.PaddingTop = UDim.new(0, 12)
+SidePadding.PaddingLeft = UDim.new(0, 10)
+SidePadding.PaddingRight = UDim.new(0, 10)
+SidePadding.Parent = Sidebar
+
+-- CONTENT AREA
+
+local Content = Instance.new("ScrollingFrame")
+Content.Position = UDim2.new(0, 275, 0, 115)
+Content.Size = UDim2.new(1, -295, 1, -130)
+Content.BackgroundTransparency = 1
+Content.BorderSizePixel = 0
+Content.ScrollBarThickness = 5
+Content.ScrollBarImageColor3 = Cyan
+Content.CanvasSize = UDim2.new(0, 0, 0, 0)
+Content.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Content.Parent = Main
+
+local ContentLayout = Instance.new("UIListLayout")
+ContentLayout.Padding = UDim.new(0, 16)
+ContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+ContentLayout.Parent = Content
+
+local ContentPadding = Instance.new("UIPadding")
+ContentPadding.PaddingTop = UDim.new(0, 8)
+ContentPadding.PaddingBottom = UDim.new(0, 15)
+ContentPadding.Parent = Content
+
+-- MINIMIZED ICON
+
+local Mini = Instance.new("Frame")
+Mini.Size = UDim2.fromOffset(58, 58)
+Mini.Position = UDim2.new(0, 20, 0.5, 0)
+Mini.AnchorPoint = Vector2.new(0, 0.5)
+Mini.BackgroundColor3 = Cyan
+Mini.Visible = false
+Mini.Parent = ScreenGui
+Corner(Mini, 15)
+Stroke(Mini, Cyan, 3)
+
+local MiniImage = Instance.new("ImageButton")
+MiniImage.Size = UDim2.new(1, -6, 1, -6)
+MiniImage.Position = UDim2.fromOffset(3, 3)
+MiniImage.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+MiniImage.Image = "rbxassetid://84478996527707"
+MiniImage.ScaleType = Enum.ScaleType.Fit
+MiniImage.Parent = Mini
+Corner(MiniImage, 12)
+
+MinButton.MouseButton1Click:Connect(function()
+    Main.Visible = false
+    Mini.Visible = true
+end)
+
+MiniImage.MouseButton1Click:Connect(function()
+    Mini.Visible = false
+    Main.Visible = true
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- DRAG WINDOW
+
+local Dragging = false
+local DragStart
+local StartPosition
+
+Header.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        Dragging = true
+        DragStart = input.Position
+        StartPosition = Main.Position
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if Dragging and (
+        input.UserInputType == Enum.UserInputType.MouseMovement
+        or input.UserInputType == Enum.UserInputType.Touch
+    ) then
+        local Delta = input.Position - DragStart
+        Main.Position = UDim2.new(
+            StartPosition.X.Scale,
+            StartPosition.X.Offset + Delta.X,
+            StartPosition.Y.Scale,
+            StartPosition.Y.Offset + Delta.Y
+        )
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        Dragging = false
+    end
+end)
+
+-- TAB SYSTEM
+
+local CurrentTab
+
+local Window = {}
+
+function Window:CreateTab(Name)
+    local Tab = {}
+
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(1, 0, 0, 65)
+    TabButton.BackgroundColor3 = Panel
+    TabButton.Text = Name
+    TabButton.TextColor3 = White
+    TabButton.TextSize = 21
+    TabButton.Font = Enum.Font.GothamBold
+    TabButton.Parent = Sidebar
+    Corner(TabButton, 18)
+
+    TabButton.MouseButton1Click:Connect(function()
+        if CurrentTab then
+            for _, v in ipairs(Content:GetChildren()) do
+                if v:IsA("GuiObject") and v ~= ContentLayout
+                and v ~= ContentPadding then
+                    v.Visible = false
+                end
+            end
+            CurrentTab.BackgroundColor3 = Panel
+        end
+
+        CurrentTab = TabButton
+        TabButton.BackgroundColor3 = Cyan
+
+        for _, v in ipairs(Content:GetChildren()) do
+            if v:IsA("GuiObject") and v ~= ContentLayout
+            and v ~= ContentPadding then
+                v.Visible = true
+            end
+        end
+    end)
+
+    function Tab:CreateButton(Config)
+        local Button = Instance.new("TextButton")
+        Button.Size = UDim2.new(1, -8, 0, 65)
+        Button.BackgroundColor3 = Panel
+        Button.Text = Config.Name
+        Button.TextColor3 = White
+        Button.TextSize = 20
+        Button.Font = Enum.Font.GothamBold
+        Button.Parent = Content
+        Corner(Button, 18)
+
+        Button.MouseButton1Click:Connect(function()
+            if Config.Callback then
+                Config.Callback()
+            end
+        end)
+
+        return Button
+    end
+
+    function Tab:CreateToggle(Config)
+        local Row = Instance.new("Frame")
+        Row.Size = UDim2.new(1, -8, 0, 65)
+        Row.BackgroundColor3 = Panel
+        Row.Parent = Content
+        Corner(Row, 18)
+
+        local Label = Instance.new("TextLabel")
+        Label.Size = UDim2.new(0.7, 0, 1, 0)
+        Label.Position = UDim2.fromOffset(20, 0)
+        Label.BackgroundTransparency = 1
+        Label.Text = Config.Name
+        Label.TextColor3 = White
+        Label.TextSize = 19
+        Label.Font = Enum.Font.GothamBold
+        Label.TextXAlignment = Enum.TextXAlignment.Left
+        Label.Parent = Row
+
+        local Toggle = Instance.new("TextButton")
+        Toggle.Size = UDim2.fromOffset(95, 42)
+        Toggle.Position = UDim2.new(1, -110, 0.5, 0)
+        Toggle.AnchorPoint = Vector2.new(0, 0.5)
+        Toggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+        Toggle.Text = ""
+        Toggle.Parent = Row
+        Corner(Toggle, 25)
+
+        local Dot = Instance.new("Frame")
+        Dot.Size = UDim2.fromOffset(30, 30)
+        Dot.Position = UDim2.fromOffset(6, 6)
+        Dot.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+        Dot.Parent = Toggle
+        Corner(Dot, 20)
+
+        local State = Config.CurrentValue or false
+
+        local function Update()
+            if State then
+                Toggle.BackgroundColor3 = Cyan
+                Dot.Position = UDim2.new(1, -36, 0, 6)
+                Dot.BackgroundColor3 = White
+            else
+                Toggle.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+                Dot.Position = UDim2.fromOffset(6, 6)
+                Dot.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+            end
+        end
+
+        Toggle.MouseButton1Click:Connect(function()
+            State = not State
+            Update()
+            if Config.Callback then
+                Config.Callback(State)
+            end
+        end)
+
+        Update()
+        return Toggle
+    end
+
+    function Tab:CreateSlider(Config)
+        local Row = Instance.new("Frame")
+        Row.Size = UDim2.new(1, -8, 0, 85)
+        Row.BackgroundColor3 = Panel
+        Row.Parent = Content
+        Corner(Row, 18)
+
+        local Label = Instance.new("TextLabel")
+        Label.Size = UDim2.new(0.7, 0, 0, 35)
+        Label.Position = UDim2.fromOffset(18, 5)
+        Label.BackgroundTransparency = 1
+        Label.Text = Config.Name
+        Label.TextColor3 = White
+        Label.TextSize = 18
+        Label.Font = Enum.Font.GothamBold
+        Label.TextXAlignment = Enum.TextXAlignment.Left
+        Label.Parent = Row
+
+        local ValueLabel = Instance.new("TextLabel")
+        ValueLabel.Size = UDim2.new(0, 100, 0, 35)
+        ValueLabel.Position = UDim2.new(1, -115, 0, 5)
+        ValueLabel.BackgroundTransparency = 1
+        ValueLabel.TextColor3 = Cyan
+        ValueLabel.TextSize = 17
+        ValueLabel.Font = Enum.Font.GothamBold
+        ValueLabel.Parent = Row
+
+        local Bar = Instance.new("TextButton")
+        Bar.Size = UDim2.new(1, -36, 0, 8)
+        Bar.Position = UDim2.fromOffset(18, 60)
+        Bar.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+        Bar.Text = ""
+        Bar.Parent = Row
+        Corner(Bar, 10)
+
+        local Fill = Instance.new("Frame")
+        Fill.Size = UDim2.fromScale(0, 1)
+        Fill.BackgroundColor3 = Cyan
+        Fill.Parent = Bar
+        Corner(Fill, 10)
+
+        local MinValue = Config.Range[1]
+        local MaxValue = Config.Range[2]
+        local Value = Config.CurrentValue or MinValue
+
+        local function SetValue(NewValue)
+            Value = math.clamp(NewValue, MinValue, MaxValue)
+            local Step = Config.Increment or 1
+            Value = math.floor(Value / Step + 0.5) * Step
+            Value = math.clamp(Value, MinValue, MaxValue)
+
+            local Percent = (Value - MinValue) / (MaxValue - MinValue)
+            Fill.Size = UDim2.fromScale(Percent, 1)
+            ValueLabel.Text = tostring(Value) .. " " .. (Config.Suffix or "")
+
+            if Config.Callback then
+                Config.Callback(Value)
+            end
+        end
+
+        local function UpdateFromInput(Input)
+            local Percent = math.clamp(
+                (Input.Position.X - Bar.AbsolutePosition.X)
+                / Bar.AbsoluteSize.X, 0, 1
+            )
+            SetValue(MinValue + (MaxValue - MinValue) * Percent)
+        end
+
+        local Sliding = false
+
+        Bar.InputBegan:Connect(function(Input)
+            if Input.UserInputType == Enum.UserInputType.MouseButton1
+            or Input.UserInputType == Enum.UserInputType.Touch then
+                Sliding = true
+                UpdateFromInput(Input)
+            end
+        end)
+
+        UIS.InputChanged:Connect(function(Input)
+            if Sliding and (
+                Input.UserInputType == Enum.UserInputType.MouseMovement
+                or Input.UserInputType == Enum.UserInputType.Touch
+            ) then
+                UpdateFromInput(Input)
+            end
+        end)
+
+        UIS.InputEnded:Connect(function(Input)
+            if Input.UserInputType == Enum.UserInputType.MouseButton1
+            or Input.UserInputType == Enum.UserInputType.Touch then
+                Sliding = false
+            end
+        end)
+
+        SetValue(Value)
+        return Row
+    end
+
+    if not CurrentTab then
+        CurrentTab = TabButton
+        TabButton.BackgroundColor3 = Cyan
+    else
+        for _, v in ipairs(Content:GetChildren()) do
+            if v:IsA("GuiObject") and v ~= ContentLayout
+            and v ~= ContentPadding then
+                v.Visible = false
+            end
+        end
+    end
+
+    return Tab
+end
+
+-- RAYFIELD COMPATIBILITY
+
+local Rayfield = {}
+
+function Rayfield:SetVisibility(Value)
+    Main.Visible = Value
+    Mini.Visible = not Value
+end
+
+function Rayfield:Notify(Config)
+    warn("[EXZ HUB] " .. tostring(Config.Content or "Loaded"))
+end
+
+function Rayfield:CreateWindow(Config)
+    Title.Text = Config.Name or "EXZ HUB"
+    return Window
+end
+
+-- CREATE WINDOW
+local RayfieldWindow = Rayfield:CreateWindow({
+    Name = "EXZ HUB"
+})
+
+local PlayerTab = RayfieldWindow:CreateTab("Main")
+local ESPTab = RayfieldWindow:CreateTab("Settings")
+local CreditsTab = RayfieldWindow:CreateTab("Credits")
+
+-- เพิ่มปุ่มในแท็บ Credits
+CreditsTab:CreateButton({
+    Name = "EXZ HUB | MM2",
+    Callback = function()
+        print("EXZ HUB")
+    end
+})
+
+print("EXZ HUB CUSTOM UI LOADED")
+  
